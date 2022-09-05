@@ -1,18 +1,22 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MenuPage extends StatelessWidget {
-  const MenuPage({
+  MenuPage({
     Key? key,
     required this.iconData,
     required this.title,
     required this.onTap,
-
+    this.color,
+    this.splashColor,
   }) : super(key: key);
 
   final IconData iconData;
   final String title;
   final void Function() onTap;
+  Color? color = Colors.indigoAccent[100];
+  Color? splashColor = Colors.indigoAccent;
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +25,9 @@ class MenuPage extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
       ),
       elevation: 8,
-      color: Colors.indigoAccent[100],
+      color: color,
       child: InkWell(
-        splashColor: Colors.indigoAccent,
+        splashColor: splashColor,
         borderRadius: BorderRadius.circular(10),
         splashFactory: InkSplash.splashFactory,
         onTap: onTap,

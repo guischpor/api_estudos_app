@@ -1,5 +1,5 @@
 import 'package:api_estudos_app/core/services/client_http.dart';
-import 'package:api_estudos_app/presentation/pages/post_page/controller/controller_post.dart';
+import 'package:api_estudos_app/presentation/pages/controller/controller_app.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
@@ -9,7 +9,7 @@ class ProvidersList {
       create: (_) => ClientHttp(),
     ),
     ChangeNotifierProvider(
-      create: (context) => ControllerPost(context.read()),
+      create: (context) => ControllerApp(context.read()),
     ),
     
   ];

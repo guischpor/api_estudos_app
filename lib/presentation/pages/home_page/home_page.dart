@@ -1,4 +1,5 @@
 import 'package:api_estudos_app/presentation/pages/home_page/widgets/menu_page.dart';
+import 'package:api_estudos_app/presentation/pages/photos_page/photos_page.dart';
 import 'package:api_estudos_app/presentation/pages/post_page/posts_page.dart';
 import 'package:api_estudos_app/presentation/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: customAppBar(title: 'Home Page'),
+      appBar: CustomAppBar(title: 'Home Page'),
       body: _body(),
     );
   }
@@ -29,10 +30,28 @@ class _HomeScreenState extends State<HomeScreen> {
             MenuPage(
               iconData: Icons.text_snippet,
               title: 'Post Page',
+              color: Colors.indigoAccent[400],
+              splashColor: Colors.indigoAccent[900],
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => const PostsPages(),
+                    builder: (context) => PostsPages(
+                      colorAppBar: Colors.indigoAccent[400]!,
+                    ),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 15),
+            MenuPage(
+              iconData: Icons.photo_album,
+              title: 'Photos Page',
+              color: Colors.redAccent[400],
+              splashColor: Colors.redAccent[900],
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => PhotosPage(colorAppBar: Colors.redAccent[400]!,),
                   ),
                 );
               },
