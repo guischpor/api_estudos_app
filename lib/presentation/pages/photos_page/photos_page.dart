@@ -1,4 +1,5 @@
 import 'package:api_estudos_app/presentation/pages/controller/controller_app.dart';
+import 'package:api_estudos_app/presentation/pages/photos_page/widgets/menu_item_photo.dart';
 import 'package:api_estudos_app/presentation/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,6 +18,7 @@ class PhotosPage extends StatefulWidget {
 
 class _PhotosPageState extends State<PhotosPage> {
   late final controllerApp = Provider.of<ControllerApp>(context);
+  final ScrollController _scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -40,28 +42,30 @@ class _PhotosPageState extends State<PhotosPage> {
             child: Text('Erro ao carregar os dados'),
           );
         } else {
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-            child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 1,
-                crossAxisSpacing: 2,
-                mainAxisSpacing: 2,
+          return Scrollbar(
+            controller: _scrollController,
+            interactive: true,
+            thumbVisibility: true,
+            trackVisibility: true,
+            thickness: 10,
+            radius: const Radius.circular(20),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+              child: GridView.builder(
+                controller: _scrollController,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 1,
+                  crossAxisSpacing: 5,
+                  mainAxisSpacing: 5,
+                ),
+                shrinkWrap: true,
+                itemCount: controllerApp.photo.length,
+                itemBuilder: (context, index) {
+                  final photoIndex = controllerApp.photo[index];
+                  return MenuItemPhoto(photo: photoIndex);
+                },
               ),
-              shrinkWrap: true,
-              itemCount: controllerApp.photo.length,
-              itemBuilder: (context, index) {
-                final photoIndex = controllerApp.photo[index];
-                return Column(
-                  children: [
-                    Image.network(
-                      photoIndex.url,
-                      fit: BoxFit.cover,
-                    )
-                  ],
-                );
-              },
             ),
           );
         }

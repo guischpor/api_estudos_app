@@ -51,11 +51,19 @@ class _HomeScreenState extends State<HomeScreen> {
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => PhotosPage(colorAppBar: Colors.redAccent[400]!,),
+                    builder: (context) => PhotosPage(
+                      colorAppBar: Colors.redAccent[400]!,
+                    ),
                   ),
                 );
               },
             ),
+            // const SizedBox(height: 15),
+            // const ImageGoogleDrive(
+            //   imageUrl: '1Pijjg__QrXAWoZI7G51ohR2Nx4HrnF7S',
+            //   width: 300,
+            //   fit: BoxFit.cover,
+            // )
           ],
         ),
       ),
