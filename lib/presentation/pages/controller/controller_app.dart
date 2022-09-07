@@ -34,6 +34,8 @@ class ControllerApp extends ChangeNotifier {
         body: item['body'],
       ));
     }
+
+    notifyListeners();
   }
 
   Future getPhotos() async {
