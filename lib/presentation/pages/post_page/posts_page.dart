@@ -71,7 +71,7 @@ class _PostsPagesState extends State<PostsPages> {
               child: Form(
                 key: _formKey,
                 child: TextFormComponentStandard(
-                  hintText: 'Pesquisar Clientes',
+                  hintText: 'Search Post',
                   keyboardType: TextInputType.name,
                   controller: _searchController,
                   onChanged: (value) {
