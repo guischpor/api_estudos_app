@@ -12,48 +12,30 @@ class ControllerApp extends ChangeNotifier {
     this.clientHttp,
   );
 
-  final List<Post> _post = [];
+  List<Post> _post = [];
   List<Post> get post => [..._post];
 
-  final List<Photo> _photo = [];
+  List<Photo> _photo = [];
   List<Photo> get photo => [..._photo];
 
-  Future getPosts() async {
+  Future<void> getPosts() async {
     _post.clear();
 
     final response =
         await clientHttp.get(url: 'https://jsonplaceholder.typicode.com/posts');
 
     List<dynamic> data = jsonDecode(response.body);
-
-    for (var item in data) {
-      _post.add(Post(
-        userId: item['userId'],
-        id: item['id'],
-        title: item['title'],
-        body: item['body'],
-      ));
-    }
-
+    _post = data.map(Post.fromJson).toList();
     notifyListeners();
   }
 
-  Future getPhotos() async {
+  Future<void> getPhotos() async {
     _photo.clear();
 
     final response = await clientHttp.get(
         url: 'https://jsonplaceholder.typicode.com/photos');
 
     List<dynamic> data = jsonDecode(response.body);
-
-    for (var item in data) {
-      _photo.add(Photo(
-        albumId: item['albumId'],
-        id: item['id'],
-        title: item['title'],
-        url: item['url'],
-        thumbnailUrl: item['thumbnailUrl'],
-      ));
-    }
+    _photo = data.map(Photo.fromJson).toList();
   }
 }

@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 class Photo {
   int albumId;
@@ -15,8 +14,18 @@ class Photo {
     required this.thumbnailUrl,
   });
 
+  static Photo fromJson(dynamic data) {
+    return Photo(
+      albumId: data['albumId'],
+      id: data['id'],
+      title: data['title'],
+      url: data['url'],
+      thumbnailUrl: data['thumbnailUrl'],
+    );
+  }
+
   Map<String, dynamic> toMap() {
-    return <String, dynamic>{
+    return {
       'albumId': albumId,
       'id': id,
       'title': title,
@@ -24,19 +33,4 @@ class Photo {
       'thumbnailUrl': thumbnailUrl,
     };
   }
-
-  factory Photo.fromMap(Map<String, dynamic> map) {
-    return Photo(
-      albumId: map['albumId'] ?? '',
-      id: map['id'] ?? '',
-      title: map['title'] ?? '',
-      url: map['body'] ?? '',
-      thumbnailUrl: map['thumbnailUrl'] ?? '',
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory Photo.fromJson(String source) =>
-      Photo.fromMap(json.decode(source) as Map<String, dynamic>);
 }

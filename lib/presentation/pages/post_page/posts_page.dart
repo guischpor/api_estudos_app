@@ -3,7 +3,7 @@ import 'package:api_estudos_app/presentation/pages/controller/controller_app.dar
 import 'package:api_estudos_app/presentation/pages/post_page/widgets/menu_post_item.dart';
 import 'package:api_estudos_app/presentation/widgets/custom_app_bar.dart';
 import 'package:api_estudos_app/presentation/widgets/custom_icon_button.dart';
-import 'package:api_estudos_app/presentation/widgets/text_form_component_standard.dart';
+import 'package:api_estudos_app/presentation/widgets/custom_text_form.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -70,7 +70,7 @@ class _PostsPagesState extends State<PostsPages> {
               padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
               child: Form(
                 key: _formKey,
-                child: TextFormComponentStandard(
+                child: CustomTextForm(
                   hintText: 'Search Post',
                   keyboardType: TextInputType.name,
                   controller: _searchController,
@@ -93,11 +93,7 @@ class _PostsPagesState extends State<PostsPages> {
                 ),
               ),
             ),
-            post.isEmpty
-                ? const Center(
-                    child: Text('Nenhum dado encontrado!'),
-                  )
-                : SizedBox(height: 600, child: _posts()),
+            SizedBox(height: 600, child: _posts()),
           ],
         ),
       ),
@@ -116,33 +112,37 @@ class _PostsPagesState extends State<PostsPages> {
             child: Text('Erro ao carregar os dados'),
           );
         } else {
-          return Scrollbar(
-            controller: _scrollController,
-            interactive: true,
-            thumbVisibility: true,
-            trackVisibility: true,
-            thickness: 10,
-            radius: const Radius.circular(20),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: ListView.builder(
-                // physics: const NeverScrollableScrollPhysics(),
-                controller: _scrollController,
-                shrinkWrap: true,
-                itemCount: post.length,
-                itemBuilder: (context, index) {
-                  final postIndex = post[index];
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: MenuPostItem(
-                      post: postIndex,
-                      colorAppBar: widget.colorAppBar,
+          return post.isEmpty
+              ? const Center(
+                  child: Text('Nenhum dado encontrado!'),
+                )
+              : Scrollbar(
+                  controller: _scrollController,
+                  interactive: true,
+                  thumbVisibility: true,
+                  trackVisibility: true,
+                  thickness: 10,
+                  radius: const Radius.circular(20),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: ListView.builder(
+                      // physics: const NeverScrollableScrollPhysics(),
+                      controller: _scrollController,
+                      shrinkWrap: true,
+                      itemCount: post.length,
+                      itemBuilder: (context, index) {
+                        final postIndex = post[index];
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          child: MenuPostItem(
+                            post: postIndex,
+                            colorAppBar: widget.colorAppBar,
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
-            ),
-          );
+                  ),
+                );
         }
       },
     );

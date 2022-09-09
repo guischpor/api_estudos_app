@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class Post {
   int userId;
   int id;
@@ -13,26 +11,21 @@ class Post {
     required this.body,
   });
 
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
+  static Post fromJson(dynamic data) {
+    return Post(
+      userId: data['userId'],
+      id: data['id'],
+      title: data['title'],
+      body: data['body'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
       'userId': userId,
       'id': id,
       'title': title,
       'body': body,
     };
   }
-
-  factory Post.fromMap(Map<String, dynamic> map) {
-    return Post(
-      userId: map['userId'] ?? '',
-      id: map['id'] ?? '',
-      title: map['title'] ?? '',
-      body: map['body'] ?? '',
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory Post.fromJson(String source) =>
-      Post.fromMap(json.decode(source) as Map<String, dynamic>);
 }

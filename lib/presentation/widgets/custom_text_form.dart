@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class TextFormComponentStandard extends StatelessWidget {
+class CustomTextForm extends StatelessWidget {
   final String? labelText;
   final String? label;
   final TextInputAction? textInputAction;
@@ -24,7 +24,7 @@ class TextFormComponentStandard extends StatelessWidget {
   final String? title;
   final void Function(String)? onChanged;
 
-  const TextFormComponentStandard({
+  const CustomTextForm({
     Key? key,
     this.label,
     this.labelText,
