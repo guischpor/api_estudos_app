@@ -5,6 +5,7 @@ import 'package:api_estudos_app/presentation/widgets/custom_app_bar.dart';
 import 'package:api_estudos_app/presentation/widgets/custom_icon_button.dart';
 import 'package:api_estudos_app/presentation/widgets/custom_text_form.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class PostsPages extends StatefulWidget {
@@ -57,45 +58,42 @@ class _PostsPagesState extends State<PostsPages> {
 
   @override
   Widget build(BuildContext context) {
-    final post = searchPost();
     return Scaffold(
       appBar: CustomAppBar(
         title: 'Posts Page',
         backgroundColor: widget.colorAppBar,
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-              child: Form(
-                key: _formKey,
-                child: CustomTextForm(
-                  hintText: 'Search Post',
-                  keyboardType: TextInputType.name,
-                  controller: _searchController,
-                  onChanged: (value) {
-                    setState(() {});
-                  },
-                  preffix: const Icon(
-                    Icons.search,
-                  ),
-                  suffix: _searchController.text.isNotEmpty
-                      ? CustomIconButton(
-                          iconData: Icons.close,
-                          iconSize: 21,
-                          onTap: () {
-                            _searchController.clear();
-                            setState(() {});
-                          },
-                        )
-                      : null,
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+            child: Form(
+              key: _formKey,
+              child: CustomTextForm(
+                hintText: 'Search Post',
+                keyboardType: TextInputType.name,
+                controller: _searchController,
+                onChanged: (value) {
+                  setState(() {});
+                },
+                preffix: const Icon(
+                  Icons.search,
                 ),
+                suffix: _searchController.text.isNotEmpty
+                    ? CustomIconButton(
+                        iconData: Icons.close,
+                        iconSize: 21,
+                        onTap: () {
+                          _searchController.clear();
+                          setState(() {});
+                        },
+                      )
+                    : null,
               ),
             ),
-            SizedBox(height: 600, child: _posts()),
-          ],
-        ),
+          ),
+          _posts(),
+        ],
       ),
     );
   }
@@ -113,33 +111,39 @@ class _PostsPagesState extends State<PostsPages> {
           );
         } else {
           return post.isEmpty
-              ? const Center(
-                  child: Text('Nenhum dado encontrado!'),
+              ? Center(
+                  child: Text(
+                    "Nenhum dado encontrado que corresponda a '${_searchController.text}'",
+                    style: GoogleFonts.lato(),
+                    textAlign: TextAlign.center,
+                  ),
                 )
-              : Scrollbar(
-                  controller: _scrollController,
-                  interactive: true,
-                  thumbVisibility: true,
-                  trackVisibility: true,
-                  thickness: 10,
-                  radius: const Radius.circular(20),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: ListView.builder(
-                      // physics: const NeverScrollableScrollPhysics(),
-                      controller: _scrollController,
-                      shrinkWrap: true,
-                      itemCount: post.length,
-                      itemBuilder: (context, index) {
-                        final postIndex = post[index];
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: MenuPostItem(
-                            post: postIndex,
-                            colorAppBar: widget.colorAppBar,
-                          ),
-                        );
-                      },
+              : Expanded(
+                  child: Scrollbar(
+                    controller: _scrollController,
+                    interactive: true,
+                    thumbVisibility: true,
+                    trackVisibility: true,
+                    thickness: 10,
+                    radius: const Radius.circular(20),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: ListView.builder(
+                        // physics: const NeverScrollableScrollPhysics(),
+                        controller: _scrollController,
+                        shrinkWrap: true,
+                        itemCount: post.length,
+                        itemBuilder: (context, index) {
+                          final postIndex = post[index];
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            child: MenuPostItem(
+                              post: postIndex,
+                              colorAppBar: widget.colorAppBar,
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
                 );
