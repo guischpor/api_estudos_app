@@ -44,7 +44,14 @@ class ControllerApp extends ChangeNotifier {
     Response response = await clientHttp.get(
         url: 'https://jsonplaceholder.typicode.com/photos');
 
-    List<dynamic> data = jsonDecode(response.body);
-    _photo = data.map(Photo.fromJson).toList();
+    try {
+      List<dynamic> data = jsonDecode(response.body);
+      _photo = data.map(Photo.fromJson).toList();
+    } on HttpException catch (error) {
+      String mensagem = error.msg;
+      mensagem = 'Error';
+      debugPrint(mensagem);
+      debugPrint(error.statusCode.toString());
+    }
   }
 }
