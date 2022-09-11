@@ -2,6 +2,7 @@ import 'package:api_estudos_app/presentation/pages/controller/controller_app.dar
 import 'package:api_estudos_app/presentation/pages/photos_page/widgets/menu_item_photo.dart';
 import 'package:api_estudos_app/presentation/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class PhotosPage extends StatefulWidget {
@@ -36,10 +37,18 @@ class _PhotosPageState extends State<PhotosPage> {
       future: controllerApp.getPhotos(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.error != null) {
-          return const Center(
-            child: Text('Erro ao carregar os dados'),
+          return Center(
+            child: CircularProgressIndicator(
+              color: widget.colorAppBar,
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Text(
+              snapshot.error.toString(),
+              style: GoogleFonts.lato(),
+              textAlign: TextAlign.center,
+            ),
           );
         } else {
           return Scrollbar(

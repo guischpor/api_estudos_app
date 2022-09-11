@@ -104,10 +104,18 @@ class _PostsPagesState extends State<PostsPages> {
       future: loadingPosts,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.error != null) {
-          return const Center(
-            child: Text('Erro ao carregar os dados'),
+          return Center(
+            child: CircularProgressIndicator(
+              color: widget.colorAppBar,
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Text(
+              snapshot.error.toString(),
+              style: GoogleFonts.lato(),
+              textAlign: TextAlign.center,
+            ),
           );
         } else {
           return post.isEmpty
