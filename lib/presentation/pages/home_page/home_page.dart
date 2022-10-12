@@ -1,3 +1,4 @@
+import 'package:api_estudos_app/presentation/pages/cep_page.dart/widgets/cep_page.dart';
 import 'package:api_estudos_app/presentation/pages/home_page/widgets/menu_page.dart';
 import 'package:api_estudos_app/presentation/pages/photos_page/photos_page.dart';
 import 'package:api_estudos_app/presentation/pages/post_page/posts_page.dart';
@@ -53,6 +54,22 @@ class _HomeScreenState extends State<HomeScreen> {
                   MaterialPageRoute(
                     builder: (context) => PhotosPage(
                       colorAppBar: Colors.redAccent[400]!,
+                    ),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 15),
+            MenuPage(
+              iconData: Icons.gps_fixed,
+              title: 'Via CEP',
+              color: Colors.greenAccent[400],
+              splashColor: Colors.greenAccent[900],
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => CepPage(
+                      colorAppBar: Colors.greenAccent[400]!,
                     ),
                   ),
                 );
