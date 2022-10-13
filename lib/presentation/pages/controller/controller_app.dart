@@ -79,4 +79,8 @@ class ControllerApp extends ChangeNotifier {
       debugPrint(e.statusCode.toString());
     }
   }
+
+  void clearCep() {
+    return _cep.clear();
+  }
 }

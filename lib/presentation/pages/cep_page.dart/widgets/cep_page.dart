@@ -1,5 +1,7 @@
+import 'package:api_estudos_app/core/validator/cep.dart';
 import 'package:api_estudos_app/presentation/pages/controller/controller_app.dart';
 import 'package:api_estudos_app/presentation/widgets/custom_app_bar.dart';
+import 'package:api_estudos_app/presentation/widgets/custom_icon_button.dart';
 import 'package:api_estudos_app/presentation/widgets/custom_text_form.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,6 +26,12 @@ class CepPageState extends State<CepPage> {
   final _cepController = TextEditingController();
 
   bool loading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<ControllerApp>(context, listen: false).clearCep();
+  }
 
   @override
   void dispose() {
@@ -60,11 +68,22 @@ class CepPageState extends State<CepPage> {
               preffix: const Icon(
                 Icons.search,
               ),
+              suffix: _cepController.text.isNotEmpty
+                  ? CustomIconButton(
+                      iconData: Icons.close,
+                      iconSize: 21,
+                      onTap: () {
+                        _cepController.clear();
+                        Provider.of<ControllerApp>(
+                          context,
+                          listen: false,
+                        ).clearCep();
+                        setState(() {});
+                      },
+                    )
+                  : null,
               validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'CEP Obrigatório!';
-                }
-                return null;
+                return CEP(value ?? '').validator();
               },
             ),
             const SizedBox(height: 20),
@@ -82,8 +101,17 @@ class CepPageState extends State<CepPage> {
                       setState(() {
                         loading = true;
                       });
+
                       await controllerApp.getCEP(_cepController.text);
+
+                      setState(() {
+                        loading = false;
+                      });
                     } catch (e) {
+                      setState(() {
+                        loading = false;
+                      });
+
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text('Erro ao buscar o endereço!'),
@@ -102,7 +130,16 @@ class CepPageState extends State<CepPage> {
               ),
             ),
             const SizedBox(height: 20),
-            _cep(),
+            Visibility(
+              visible: loading == true,
+              child: CircularProgressIndicator(
+                color: widget.colorAppBar,
+              ),
+            ),
+            Visibility(
+              visible: loading == false,
+              child: _cep(),
+            ),
           ],
         ),
       ),
@@ -112,6 +149,7 @@ class CepPageState extends State<CepPage> {
   Widget _cep() {
     return ListView.builder(
       shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: controllerApp.cep.length,
       itemBuilder: (context, index) {
         final cep = controllerApp.cep[index];
@@ -124,6 +162,40 @@ class CepPageState extends State<CepPage> {
               ),
               Text(
                 cep.cep,
+                style: const TextStyle(color: Colors.black),
+              ),
+              Text(
+                cep.complemento == ''
+                    ? 'Complemento Não informado'
+                    : cep.complemento,
+                style: const TextStyle(color: Colors.black),
+              ),
+              Text(
+                cep.ddd,
+                style: const TextStyle(color: Colors.black),
+              ),
+              Text(
+                cep.gia == '' ? 'Gia não informado' : cep.gia,
+                style: const TextStyle(color: Colors.black),
+              ),
+              Text(
+                cep.ibge,
+                style: const TextStyle(color: Colors.black),
+              ),
+              Text(
+                cep.localidade,
+                style: const TextStyle(color: Colors.black),
+              ),
+              Text(
+                cep.logradouro,
+                style: const TextStyle(color: Colors.black),
+              ),
+              Text(
+                cep.siafi,
+                style: const TextStyle(color: Colors.black),
+              ),
+              Text(
+                cep.uf,
                 style: const TextStyle(color: Colors.black),
               ),
             ],
