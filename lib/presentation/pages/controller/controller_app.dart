@@ -1,12 +1,13 @@
 import 'dart:convert';
 
-import 'package:api_estudos_app/core/exceptions/http_exceptions.dart';
 import 'package:api_estudos_app/core/services/client_http.dart';
 import 'package:api_estudos_app/data/model/cep.dart';
 import 'package:api_estudos_app/data/model/photo.dart';
 import 'package:api_estudos_app/data/model/post.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart';
+
+import '../../../core/exceptions/http_exceptions.dart';
 
 class ControllerApp extends ChangeNotifier {
   final ClientHttp clientHttp;
@@ -21,9 +22,7 @@ class ControllerApp extends ChangeNotifier {
   List<Photo> _photo = [];
   List<Photo> get photo => [..._photo];
 
-  // ignore: prefer_final_fields
-  List<Cep> _cep = [];
-  List<Cep> get cep => [..._cep];
+  Cep cep = Cep();
 
   Future<void> getPosts() async {
     _post.clear();
@@ -60,27 +59,16 @@ class ControllerApp extends ChangeNotifier {
     }
   }
 
-  Future<void> getCEP(String cep) async {
-    _cep.clear();
-
+  Future<Cep> getCEP(String cep) async {
     var url = 'https://viacep.com.br/ws/$cep/json/';
     Response response = await clientHttp.get(url: url);
 
-    try {
-      Map<String, dynamic> data = jsonDecode(response.body);
-      _cep.add(Cep.fromMap(data));
+    if (response.statusCode == 200) {
       notifyListeners();
-    } on HttpException catch (e) {
-      _cep.clear();
+      return Cep.fromJson(response.body);
+    } else {
       notifyListeners();
-      String mensagem = e.msg;
-      mensagem = 'Erro ao buscar o endereço!';
-      debugPrint(mensagem);
-      debugPrint(e.statusCode.toString());
+      throw Exception('CEP não encontrado');
     }
-  }
-
-  void clearCep() {
-    return _cep.clear();
   }
 }

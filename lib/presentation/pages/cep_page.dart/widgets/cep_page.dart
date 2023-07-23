@@ -1,4 +1,5 @@
 import 'package:api_estudos_app/core/validator/cep.dart';
+import 'package:api_estudos_app/data/model/cep.dart';
 import 'package:api_estudos_app/presentation/pages/controller/controller_app.dart';
 import 'package:api_estudos_app/presentation/widgets/custom_app_bar.dart';
 import 'package:api_estudos_app/presentation/widgets/custom_icon_button.dart';
@@ -20,17 +21,18 @@ class CepPage extends StatefulWidget {
 }
 
 class CepPageState extends State<CepPage> {
-  late final controllerApp = Provider.of<ControllerApp>(context);
+  late final controllerApp = Provider.of<ControllerApp>(context, listen: false);
 
   final formKey = GlobalKey<FormState>();
   final _cepController = TextEditingController();
 
   bool loading = false;
 
+  Cep cep = Cep();
+
   @override
   void initState() {
     super.initState();
-    Provider.of<ControllerApp>(context, listen: false).clearCep();
   }
 
   @override
@@ -74,10 +76,7 @@ class CepPageState extends State<CepPage> {
                       iconSize: 21,
                       onTap: () {
                         _cepController.clear();
-                        Provider.of<ControllerApp>(
-                          context,
-                          listen: false,
-                        ).clearCep();
+                        cep = Cep();
                         setState(() {});
                       },
                     )
@@ -97,27 +96,28 @@ class CepPageState extends State<CepPage> {
                   final valid = formKey.currentState?.validate() ?? false;
 
                   if (valid) {
-                    try {
+                    setState(() {
+                      loading = true;
+                    });
+
+                    await controllerApp
+                        .getCEP(_cepController.text)
+                        .then((value) {
                       setState(() {
-                        loading = true;
+                        loading = false;
+                        cep = value;
                       });
-
-                      await controllerApp.getCEP(_cepController.text);
-
+                    }).onError((error, stackTrace) {
                       setState(() {
                         loading = false;
                       });
-                    } catch (e) {
-                      setState(() {
-                        loading = false;
-                      });
-
+                      cep = Cep();
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text('Erro ao buscar o endereço!'),
                         ),
                       );
-                    }
+                    });
                   }
                 },
                 child: Text(
@@ -138,7 +138,7 @@ class CepPageState extends State<CepPage> {
             ),
             Visibility(
               visible: loading == false,
-              child: _cep(),
+              child: _cardCep(cep),
             ),
           ],
         ),
@@ -146,62 +146,69 @@ class CepPageState extends State<CepPage> {
     );
   }
 
-  Widget _cep() {
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: controllerApp.cep.length,
-      itemBuilder: (context, index) {
-        final cep = controllerApp.cep[index];
-        return Visibility(
-          child: Column(
-            children: [
-              Text(
-                cep.bairro,
-                style: const TextStyle(color: Colors.black),
-              ),
-              Text(
-                cep.cep,
-                style: const TextStyle(color: Colors.black),
-              ),
-              Text(
-                cep.complemento == ''
-                    ? 'Complemento Não informado'
-                    : cep.complemento,
-                style: const TextStyle(color: Colors.black),
-              ),
-              Text(
-                cep.ddd,
-                style: const TextStyle(color: Colors.black),
-              ),
-              Text(
-                cep.gia == '' ? 'Gia não informado' : cep.gia,
-                style: const TextStyle(color: Colors.black),
-              ),
-              Text(
-                cep.ibge,
-                style: const TextStyle(color: Colors.black),
-              ),
-              Text(
-                cep.localidade,
-                style: const TextStyle(color: Colors.black),
-              ),
-              Text(
-                cep.logradouro,
-                style: const TextStyle(color: Colors.black),
-              ),
-              Text(
-                cep.siafi,
-                style: const TextStyle(color: Colors.black),
-              ),
-              Text(
-                cep.uf,
-                style: const TextStyle(color: Colors.black),
-              ),
-            ],
-          ),
-        );
-      },
+  Widget _cardCep(Cep cep) {
+    return Card(
+      child: Column(
+        children: [
+          if (cep.bairro != null ||
+              cep.cep != null ||
+              cep.complemento != null ||
+              cep.ddd != null ||
+              cep.gia != null ||
+              cep.ibge != null ||
+              cep.logradouro != null ||
+              cep.siafi != null ||
+              cep.localidade != null ||
+              cep.uf != null) ...[
+            Text(
+              cep.bairro == null ? 'Bairro não informado' : cep.bairro!,
+              style: const TextStyle(color: Colors.black),
+            ),
+            Text(
+              cep.cep == null ? 'CEP não informado' : cep.cep!,
+              style: const TextStyle(color: Colors.black),
+            ),
+            Text(
+              cep.complemento == ''
+                  ? 'Complemento Não informado'
+                  : cep.complemento!,
+              style: const TextStyle(color: Colors.black),
+            ),
+            Text(
+              cep.ddd == '' ? 'DDD não informado' : cep.ddd!,
+              style: const TextStyle(color: Colors.black),
+            ),
+            Text(
+              cep.gia == '' ? 'Gia não informado' : cep.gia!,
+              style: const TextStyle(color: Colors.black),
+            ),
+            Text(
+              cep.ibge == '' ? 'IBGE não informado' : cep.ibge!,
+              style: const TextStyle(color: Colors.black),
+            ),
+            Text(
+              cep.localidade == ''
+                  ? 'Localidade não informado'
+                  : cep.localidade!,
+              style: const TextStyle(color: Colors.black),
+            ),
+            Text(
+              cep.logradouro == ''
+                  ? 'Logradouro não informado'
+                  : cep.logradouro!,
+              style: const TextStyle(color: Colors.black),
+            ),
+            Text(
+              cep.siafi == '' ? 'Siafi não informado' : cep.siafi!,
+              style: const TextStyle(color: Colors.black),
+            ),
+            Text(
+              cep.uf == '' ? 'UF não informado' : cep.uf!,
+              style: const TextStyle(color: Colors.black),
+            ),
+          ]
+        ],
+      ),
     );
   }
 }
